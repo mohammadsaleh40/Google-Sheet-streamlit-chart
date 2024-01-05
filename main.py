@@ -15,6 +15,7 @@ usernames = ["msaa" , "v1"]
 adminlists = ["msaa"]
 
 file_path = Path(__file__).parent / "hashed_pw.pkl"
+file_kcsv_path = Path(__file__).parent / "kol_nomarat.csv"
 with file_path.open("rb") as file:
     hashed_passwords = pickle.load(file)
 
@@ -46,12 +47,12 @@ if authenticator_status:
         load_data_button = st.button("بروزرسانی اطلاعات")        
         if load_data_button:
             dfg = pd.read_csv(f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv")
-            dfg.to_csv("kol_nomarat.csv" , index = False)
+            dfg.to_csv(file_kcsv_path , index = False)
         
         # dfg.to_csv("kol_nomarat.csv" , index = False)
             
     
-    df = pd.read_csv("kol_nomarat.csv")
+    df = pd.read_csv(file_kcsv_path)
     
     fig1 = px.bar(df, x='y', y='x2', color='x3' ,animation_frame='x1', barmode='group',)
     st.plotly_chart(fig1, use_container_width=True)
