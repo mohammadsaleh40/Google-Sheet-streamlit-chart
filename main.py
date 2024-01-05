@@ -36,16 +36,23 @@ if authenticator_status == None:
 
 if authenticator_status:
 
+    if username in adminlists:
+        sheet_id = "1vIV2Sl1Mad9e-lf24-iVqXs6gwuRij-bOUl7Iir2hQ8"
+        
+        # def load_from_google_sheet_(sheet_id):
+        #     return pd.read_csv(f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv")
+        # dfg = load_from_google_sheet_(sheet_id)
 
-
-
-
-    sheet_id = "1vIV2Sl1Mad9e-lf24-iVqXs6gwuRij-bOUl7Iir2hQ8"
-    @st.cache_data
-    def load_from_google_sheet(sheet_id):
-
-        return pd.read_csv(f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv")
-    df = load_from_google_sheet(sheet_id)
+        load_data_button = st.button("بروزرسانی اطلاعات")        
+        if load_data_button:
+            dfg = pd.read_csv(f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv")
+            dfg.to_csv("kol_nomarat.csv" , index = False)
+        
+        # dfg.to_csv("kol_nomarat.csv" , index = False)
+            
+    
+    df = pd.read_csv("kol_nomarat.csv")
+    
     fig1 = px.bar(df, x='y', y='x2', color='x3' ,animation_frame='x1', barmode='group',)
     st.plotly_chart(fig1, use_container_width=True)
 
@@ -56,7 +63,7 @@ if authenticator_status:
         ddf = df.copy().pivot( index='y' ,columns=["x1","x3"])
         @st.cache_data
         def sta_df(df):
-            return ddf.mean() , ddf.max() , ddf.min() , ddf.std()
+            return df.mean() , df.max() , df.min() , df.std()
         
         mean_df , max_df ,min_df ,std_df = sta_df(ddf)
         st.text("میانگین نمرات کلاس در آزمون‌ها و درس‌های مختلف")
@@ -69,7 +76,7 @@ if authenticator_status:
         std_df
 
 
-        
+
     # قسمت کناری
     st.sidebar.title(f"خوش آمدید {name}")
     authenticator.logout("خروج" , "sidebar")
